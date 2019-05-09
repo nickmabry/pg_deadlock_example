@@ -1,7 +1,9 @@
 defmodule DeadlockWeb.SecretAgentController do
   use DeadlockWeb, :controller
 
-  alias Deadlock.SecretAgent
+  import Ecto.Query, only: [from: 2]
+
+  alias Deadlock.{Cover, Repo, SecretAgent}
 
   action_fallback DeadlockWeb.FallbackController
 
@@ -23,7 +25,18 @@ defmodule DeadlockWeb.SecretAgentController do
     secret_agent = SecretAgent.get(id)
 
     with %SecretAgent{} = secret_agent <- SecretAgent.update(secret_agent, params) do
+      sanitize_temp_info(secret_agent)
       render(conn, "show.json", secret_agent: secret_agent)
     end
+  end
+
+  defp sanitize_temp_info(secret_agent) do
+    Repo.update_all(
+      from(c in Cover,
+        where: c.secret_agent_id == ^secret_agent.id,
+        update: [set: [temp_info: nil]]
+      ),
+      []
+    )
   end
 end

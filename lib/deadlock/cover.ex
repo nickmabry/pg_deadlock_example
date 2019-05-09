@@ -7,6 +7,7 @@ defmodule Deadlock.Cover do
   schema "covers" do
     field :code_name, :string
     field :name, :string
+    field :temp_info, :string
 
     belongs_to :secret_agent, SecretAgent
 
