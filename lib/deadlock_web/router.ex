@@ -7,5 +7,7 @@ defmodule DeadlockWeb.Router do
 
   scope "/api", DeadlockWeb do
     pipe_through :api
+
+    resources "/secret_agents", SecretAgentController, only: [:show, :create, :update]
   end
 end

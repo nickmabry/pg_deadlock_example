@@ -3,6 +3,16 @@ defmodule Deadlock.SecretAgentTest do
 
   alias Deadlock.SecretAgent
 
+  describe "get/1" do
+    setup :create_agent
+
+    test "looks up an agent by ID", %{agent: agent} do
+      retrieved_agent = SecretAgent.get(agent.id)
+
+      assert retrieved_agent == agent
+    end
+  end
+
   describe "create/1" do
     test "creates a secret agent" do
       params = %{
